@@ -1,11 +1,4 @@
-SIGN = {
-    "space": "🌳",
-    "crossroads": "  ",
-    "road_h": "||",
-    "road_g": "==",
-    "gate": "🧌🫥",
-    "searcher": "😊",
-}
+from game.create_maze import test_mase, SIGN
 
 
 class Point(object):
@@ -18,12 +11,17 @@ class Point(object):
         ret = str(self.x) + str(self.y)
         return ret
 
+x, y, p = test_mase()
 
 class MazeTemplate(object):
-    def __init__(self):
-        self.row = range(5)
-        self.col = range(5)
+    def __init__(self, row= x, col = y, points =p):
+        self.row = row
+        self.col = col
         self.points = []
+        self.list_points = points
+        self.template = self.empty_base()
+        self.template = self.create_maze()
+        self.sercher = self.create_maze()
 
     def __str__(self):
         yo = 0
@@ -55,40 +53,22 @@ class MazeTemplate(object):
 
     def empty_base(self):
         points = []
-        for x in self.col:
-            for y in self.row:
+        for x in range(self.col):
+            for y in range(self.row):
                 point = Point(x, y, SIGN["space"])
                 points.append(point)
         self.points = points
 
-    def test_maze(self):
-        new = (
-            (0, 0, SIGN["crossroads"]),
-            (0, 1, SIGN["road_g"]),
-            (0, 2, SIGN["gate"]),
-            (1, 2, SIGN["road_h"]),
-            (2, 0, SIGN["crossroads"]),
-            (2, 1, SIGN["road_g"]),
-            (2, 2, SIGN["crossroads"]),
-            (2, 3, SIGN["road_g"]),
-            (2, 4, SIGN["crossroads"]),
-            (3, 0, SIGN["road_h"]),
-            (3, 2, SIGN["road_h"]),
-            (3, 4, SIGN["road_h"]),
-            (4, 0, SIGN["crossroads"]),
-            (4, 2, SIGN["crossroads"]),
-            (4, 3, SIGN["road_g"]),
-            (4, 4, SIGN["crossroads"]),
-        )
+    def create_maze(self):
         if len(self.points) > 0:
-            for p in new:
+            for p in self.list_points:
                 for ip in self.points:
                     if p[0] == ip.x and p[1] == ip.y:
                         i = self.points.index(ip)
                         self.points[i] = Point(ip.x, ip.y, p[2])
         else:
             self.points = []
-            for p in new:
+            for p in self.list_points:
                 self.points += [Point(p[0], p[1], p[2])]
 
 
@@ -137,7 +117,7 @@ class Searcher(Point):
 
 
 class Riches(Point):
-    def __init__(self, x, y, tag="."):
+    def __init__(self, x, y, tag=SIGN["crossroads"]):
         super(Riches, self).__init__(x, y, tag=".")
         self.info = False
 
@@ -145,3 +125,12 @@ class Riches(Point):
     def replace_info(self):
         self.info = True
         print("💰 💰 💰  You found treasure 💰 💰 💰")
+
+class GameMaze:
+    def __init__(self, x= x, y = y, p =p) -> None:
+        self.template = MazeTemplate(x,y,p)
+        self.template.empty_base()
+        self.template.create_maze()
+        self.sercher = MazeTemplate(x,y,p)
+        self.sercher.empty_base()
+        self.sercher.create_maze()
