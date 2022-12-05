@@ -1,5 +1,5 @@
 from game.create_maze import maze_data
-from game.maze import GameMaze, Searcher, Riches
+from game.maze import MazeTemplate, Searcher, Riches
 
 def main():
     print("Hello!\n It's the maze game")
@@ -9,17 +9,16 @@ def main():
         points, searcher, treasure, x_max, y_max = maze_data(path)
     else:
         points, searcher, treasure, x_max, y_max = maze_data('maze.txt')
-    maze = GameMaze(x=x_max, y=y_max, p=points)
+    maze = MazeTemplate(row=x_max, col=y_max, points=points)
     print("Let's go for treasure")
     searcher = Searcher(searcher[0],searcher[1])
-    riches = Riches(treasure[0], [1])
-    searcher.show(maze.sercher)
+    riches = Riches(treasure[0], treasure[1])
     while searcher.again:
-        searcher.exit_pat(maze.sercher)
+        searcher.exit_maze(maze)
         if searcher.again:
-            searcher.monitor(maze.sercher, riches)
-            maze.template.create_maze()
-            searcher.show(maze.template)
+            searcher.show(maze)
+            searcher.check(maze, riches)
+            maze.create_maze()
     print('And now you can go home')
     if riches.info:
         print('You go home taking digital, non-linear bitcoins with you')

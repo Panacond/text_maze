@@ -19,9 +19,8 @@ class MazeTemplate(object):
         self.col = col
         self.points = []
         self.list_points = points
-        self.template = self.empty_base()
-        self.template = self.create_maze()
-        self.sercher = self.create_maze()
+        self.create_maze_one_step()
+
 
     def __str__(self):
         yo = 0
@@ -70,6 +69,10 @@ class MazeTemplate(object):
             self.points = []
             for p in self.list_points:
                 self.points += [Point(p[0], p[1], p[2])]
+    
+    def create_maze_one_step(self):
+        self.empty_base()
+        self.create_maze()
 
 
 class Searcher(Point):
@@ -77,17 +80,17 @@ class Searcher(Point):
         super().__init__(x, y, tag)
         self.again = True
 
-    def show(self, pat):
-        pat.replace_tag(self.x, self.y, self.tag)
-        print(pat)
+    def show(self, maze):
+        maze.replace_tag(self.x, self.y, self.tag)
+        print(maze)
 
-    def exit_pat(self, maze):
+    def exit_maze(self, maze):
         if maze.find_tag(self.x, self.y) == SIGN["gate"]:
             command = input("Do you want to leave? (+ or q,- or e)")
             if command == "q" or command == "+":
                 self.again = False
 
-    def monitor(self, pattern, riches):
+    def check(self, pattern, riches):
         self.riches_find(riches)
         note = "You can go {}, type {} or {}"
         list_check = [
@@ -102,7 +105,7 @@ class Searcher(Point):
             if  tag in correct_tag :
                 print(note.format(i[2], i[3], i[4]))
         go = None
-        while go not in ("a", "4", "d", "6", "x", "2", "8", "w", "else"):
+        while go not in ("a", "4", "d", "6", "x", "2", "8", "w"):
             go = input("Type your command:")
             for i in list_check:
                 tag = pattern.find_tag(self.x + i[0], self.y + i[1])
@@ -112,25 +115,19 @@ class Searcher(Point):
             print("Correct your command")
 
     def riches_find(self, riches):
+        print(riches.x, "  ", riches.y)
+        print(self.x, " ", self.y)
         if self.x == riches.x and self.y == riches.y and riches.info == False:
             riches.replace_info
+            print(self.x, " ", self.y)
 
 
 class Riches(Point):
     def __init__(self, x, y, tag=SIGN["crossroads"]):
-        super(Riches, self).__init__(x, y, tag=".")
+        super(Riches, self).__init__(x, y, tag=tag)
         self.info = False
 
     @property
     def replace_info(self):
         self.info = True
         print("💰 💰 💰  You found treasure 💰 💰 💰")
-
-class GameMaze:
-    def __init__(self, x= x, y = y, p =p) -> None:
-        self.template = MazeTemplate(x,y,p)
-        self.template.empty_base()
-        self.template.create_maze()
-        self.sercher = MazeTemplate(x,y,p)
-        self.sercher.empty_base()
-        self.sercher.create_maze()

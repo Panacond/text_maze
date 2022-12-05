@@ -18,8 +18,8 @@ def read_file (path):
 
 DESIGNATIONS ={
     'g': SIGN["gate"],
-    '-': SIGN["road_h"],
-    '|': SIGN["road_g"],
+    '-': SIGN["road_g"],
+    '|': SIGN["road_h"],
     ' ': SIGN["space"],
     '+': SIGN["crossroads"],
     's': SIGN["crossroads"],
@@ -28,18 +28,17 @@ DESIGNATIONS ={
 
 def maze_point(list_chapters):
     points = []
-    x_max = 0
-    y_max = len(list_chapters)
+    x_max = len(list_chapters)
+    y_max = 0
     for y, string in enumerate(list_chapters):
-        print(len(string))
-        x_max = len(string) if len(string) > x_max else x_max
+        y_max = len(string) if len(string) > y_max else y_max
         for x, character in enumerate(string):
             sign = DESIGNATIONS[character]
             if character == "s":
-                searcher = [x,y]
+                searcher = [y,x]
             if character == "x":
-                treasure = [x,y]
-            points.append((x,y, sign))
+                treasure = [y,x]
+            points.append((y,x, sign))
     return points, searcher, treasure,  y_max, x_max
 
 
