@@ -115,11 +115,8 @@ class Searcher(Point):
             print("Correct your command")
 
     def riches_find(self, riches):
-        print(riches.x, "  ", riches.y)
-        print(self.x, " ", self.y)
         if self.x == riches.x and self.y == riches.y and riches.info == False:
             riches.replace_info
-            print(self.x, " ", self.y)
 
 
 class Riches(Point):
